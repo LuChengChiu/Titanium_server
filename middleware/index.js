@@ -2,7 +2,14 @@ const admin = require("../config/firebase-config");
 class Middleware {
   async decodeToken(req, res, next) {
     try {
-      console.log("MIDDLEWARE check cookies:", req.cookies);
+      console.log(
+        "MIDDLEWARE check cookies:",
+        req.cookies,
+        "SESSION",
+        req.session,
+        "HEADERS",
+        req.headers
+      );
       if (req.headers.authorization) {
         const token = req.headers.authorization.split(" ")[1];
         const decodeValue = await admin.auth().verifyIdToken(token);
