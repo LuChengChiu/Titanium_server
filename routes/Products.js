@@ -17,13 +17,20 @@ cloudinary.config({
   api_key: CLOUDINARY_API_KEY,
   api_secret: CLOUDINARY_API_SECRET,
 });
+// const database = mysql.createConnection({
+//   user: TITANIUM_USER,
+//   host: TITANIUM_HOST,
+//   password: TITANIUM_PWD,
+//   database: TITANIUM_DB,
+// });
+const { CLOUD_SQL_USER, CLOUD_SQL_HOST, CLOUD_SQL_PWD, CLOUD_SQL_DB } =
+  process.env;
 const database = mysql.createConnection({
-  user: TITANIUM_USER,
-  host: TITANIUM_HOST,
-  password: TITANIUM_PWD,
-  database: TITANIUM_DB,
+  user: CLOUD_SQL_USER,
+  host: CLOUD_SQL_HOST,
+  password: CLOUD_SQL_PWD,
+  database: CLOUD_SQL_DB,
 });
-
 router.get("/", async (req, res) => {
   try {
     const cloudResponse = await cloudinary.api.resources({
@@ -68,7 +75,5 @@ router.post("/id", async (req, res) => {
     console.log("/prouducts POST /id Error:", err);
   }
 });
-
-
 
 module.exports = router;

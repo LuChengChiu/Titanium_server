@@ -16,13 +16,20 @@ const {
   HASHKEY,
   HASHIV,
 } = process.env;
-
+const { CLOUD_SQL_USER, CLOUD_SQL_HOST, CLOUD_SQL_PWD, CLOUD_SQL_DB } =
+  process.env;
 const database = mysql.createConnection({
-  user: TITANIUM_USER,
-  host: TITANIUM_HOST,
-  password: TITANIUM_PWD,
-  database: TITANIUM_DB,
+  user: CLOUD_SQL_USER,
+  host: CLOUD_SQL_HOST,
+  password: CLOUD_SQL_PWD,
+  database: CLOUD_SQL_DB,
 });
+// const database = mysql.createConnection({
+//   user: TITANIUM_USER,
+//   host: TITANIUM_HOST,
+//   password: TITANIUM_PWD,
+//   database: TITANIUM_DB,
+// });
 const ecpay_options = {
   OperationMode: "Test", //Test or Production
   MercProfile: {

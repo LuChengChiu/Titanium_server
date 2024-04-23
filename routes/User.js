@@ -6,11 +6,19 @@ const { TITANIUM_USER, TITANIUM_HOST, TITANIUM_PWD, TITANIUM_DB } = process.env;
 const admin = require("../config/firebase-config");
 const mysql = require("mysql2");
 const bcrypt = require("bcrypt");
+// const database = mysql.createConnection({
+//   user: TITANIUM_USER,
+//   host: TITANIUM_HOST,
+//   password: TITANIUM_PWD,
+//   database: TITANIUM_DB,
+// });
+const { CLOUD_SQL_USER, CLOUD_SQL_HOST, CLOUD_SQL_PWD, CLOUD_SQL_DB } =
+  process.env;
 const database = mysql.createConnection({
-  user: TITANIUM_USER,
-  host: TITANIUM_HOST,
-  password: TITANIUM_PWD,
-  database: TITANIUM_DB,
+  user: CLOUD_SQL_USER,
+  host: CLOUD_SQL_HOST,
+  password: CLOUD_SQL_PWD,
+  database: CLOUD_SQL_DB,
 });
 const saltRounds = 10;
 
