@@ -8,7 +8,7 @@ const cartRoute = require("./routes/Cart");
 const wishlistRoute = require("./routes/Wishlist");
 const orderRoute = require("./routes/Order");
 
-// app.use("/user", userRoute);
+app.use("/user", userRoute);
 // app.use("/products", productsRoute);
 // app.use("/cart", cartRoute);
 // app.use("/wishlist", wishlistRoute);

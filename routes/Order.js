@@ -4,9 +4,9 @@ const dotenv = require("dotenv");
 dotenv.config();
 const pool = require("../pool");
 
-const { TITANIUM_USER, TITANIUM_HOST, TITANIUM_PWD, TITANIUM_DB } = process.env;
-const { CLOUD_SQL_USER, CLOUD_SQL_HOST, CLOUD_SQL_PWD, CLOUD_SQL_DB } =
-  process.env;
+// const { TITANIUM_USER, TITANIUM_HOST, TITANIUM_PWD, TITANIUM_DB } = process.env;
+// const { CLOUD_SQL_USER, CLOUD_SQL_HOST, CLOUD_SQL_PWD, CLOUD_SQL_DB } =
+//   process.env;
 // const database = mysql.createConnection({
 //   user: TITANIUM_USER,
 //   host: TITANIUM_HOST,
@@ -19,13 +19,13 @@ const { CLOUD_SQL_USER, CLOUD_SQL_HOST, CLOUD_SQL_PWD, CLOUD_SQL_DB } =
 //   password: "",
 //   database: "titanium",
 // });
-pool.getConnection(function (err, connection) {
-  if (!err) {
-    console.log("DB is connected");
-  } else {
-    console.log("Error connecting DB", err);
-  }
-});
+// pool.getConnection(function (err, connection) {
+//   if (!err) {
+//     console.log("DB is connected");
+//   } else {
+//     console.log("Error connecting DB", err);
+//   }
+// });
 router.post("/", (req, res) => {
   try {
     const userId = req.body.userId;
