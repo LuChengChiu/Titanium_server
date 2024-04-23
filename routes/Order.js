@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const dotenv = require("dotenv");
-const mysql = require("mysql2");
-
 dotenv.config();
+const pool = require("../pool");
+
 const { TITANIUM_USER, TITANIUM_HOST, TITANIUM_PWD, TITANIUM_DB } = process.env;
 const { CLOUD_SQL_USER, CLOUD_SQL_HOST, CLOUD_SQL_PWD, CLOUD_SQL_DB } =
   process.env;
@@ -13,16 +13,23 @@ const { CLOUD_SQL_USER, CLOUD_SQL_HOST, CLOUD_SQL_PWD, CLOUD_SQL_DB } =
 //   password: TITANIUM_PWD,
 //   database: TITANIUM_DB,
 // });
-const database = mysql.createConnection({
-  user: CLOUD_SQL_USER,
-  host: CLOUD_SQL_HOST,
-  password: CLOUD_SQL_PWD,
-  database: CLOUD_SQL_DB,
+// const database = mysql.createConnection({
+//   user: "root",
+//   host: "130.211.255.224",
+//   password: "",
+//   database: "titanium",
+// });
+pool.getConnection(function (err, connection) {
+  if (!err) {
+    console.log("DB is connected");
+  } else {
+    console.log("Error connecting DB", err);
+  }
 });
 router.post("/", (req, res) => {
   try {
     const userId = req.body.userId;
-    database.query(
+    pool.query(
       "SELECT * FROM titanium.orders WHERE user_id = ?;",
       [userId],
       (err, result) => {
@@ -49,7 +56,7 @@ router.post("/create", (req, res) => {
     const logisticId = req.body.logistic;
     const paymentId = req.body.payment;
     console.log(userId, orderNo, totalValue, logisticId, paymentId);
-    database.query(
+    pool.query(
       "INSERT INTO titanium.orders (order_id, user_id, total_value, logistic_id, payment_method_id) VALUES (?, ?, ?, ?, ?);",
       [orderNo, userId, totalValue, logisticId, paymentId],
       (err, result) => {
@@ -65,6 +72,20 @@ router.post("/create", (req, res) => {
     );
   } catch (err) {
     console.log("/order/create POST Error:", err);
+  }
+});
+router.get("/cloud", async (req, res) => {
+  try {
+    const query = "SELECT * FROM titanium.orders;";
+    pool.query(query, (err, results) => {
+      if (!results) {
+        res.send({ message: "No result" });
+      } else {
+        res.send(results);
+      }
+    });
+  } catch (err) {
+    console.log("ERROR CLOUD", err);
   }
 });
 
