@@ -199,7 +199,7 @@ router.post("/ecpay", (req, res) => {
       TradeDesc: trade,
       ItemName: item,
       ReturnURL: `${HOST}/return`,
-      ClientBackURL: `${HOST}/${logisticsSubType}`,
+      ClientBackURL: `${HOST}/cart/${logisticsSubType}`,
     };
     const create = new ecpay_payment(ecpay_options);
     // 注意：在此事直接提供 html + js 直接觸發的範例，直接從前端觸發付款行為
