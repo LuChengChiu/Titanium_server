@@ -205,7 +205,7 @@ router.post("/ecpay", (req, res) => {
     // 注意：在此事直接提供 html + js 直接觸發的範例，直接從前端觸發付款行為
     const html = create.payment_client.aio_check_out_all(base_param);
     console.log(html);
-    console.log(HOST, SERVER_HOST);
+    console.log(HOST);
     res.send(html);
   } catch (err) {
     console.log("/cart/ecpay POST Error:", err);

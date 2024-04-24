@@ -32,7 +32,7 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
 router.get("/sessionCheck", async (req, res) => {
-  console.log("WTF", req.cookies);
+  console.log("WTF", req.cookies, req.headers);
   const sessionCookie = req.cookies.serverSession;
   try {
     if (sessionCookie) {
