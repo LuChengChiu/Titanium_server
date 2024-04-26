@@ -19,6 +19,22 @@ const pool = require("../pool");
 //   password: CLOUD_SQL_PWD,
 //   database: CLOUD_SQL_DB,
 // });
+router.post("/", (req, res) => {
+  try {
+    const userId = req.body.userId;
+    const query = "SELECT * FROM titanium.wishlist WHERE user_id = ?;";
+    pool.query(query, [userId], (err, result) => {
+      if (err) {
+        console.log("wishlist query Error:", err);
+        return;
+      }
+      console.log(result);
+      res.send(result);
+    });
+  } catch (err) {
+    console.log("/wishlist/ POST Error:", err);
+  }
+});
 router.post("/check", (req, res) => {
   const userId = req.body.userId;
   const productId = req.body.productId;
@@ -41,38 +57,42 @@ router.post("/check", (req, res) => {
   );
 });
 router.post("/change", (req, res) => {
-  const userId = req.body.userId;
-  const productId = req.body.productId;
-  const inWishlist = req.body.wishlist;
-  console.log("/wishlistChange inWishlist:", inWishlist);
-  if (!inWishlist) {
-    pool.query(
-      "INSERT INTO titanium.wishlist (user_id, product_id) VALUES (?,?);",
-      [userId, productId],
-      (err, result) => {
-        if (err) {
-          console.log("Insert wishlist Error:", err);
+  try {
+    const userId = req.body.userId;
+    const productId = req.body.productId;
+    const inWishlist = req.body.wishlist;
+    console.log("/wishlistChange inWishlist:", inWishlist);
+    if (!inWishlist) {
+      pool.query(
+        "INSERT INTO titanium.wishlist (user_id, product_id) VALUES (?,?);",
+        [userId, productId],
+        (err, result) => {
+          if (err) {
+            console.log("Insert wishlist Error:", err);
+          }
+          if (result) {
+            console.log("Add to wishlist successfully");
+            res.send({ inWishlist: true });
+          }
         }
-        if (result) {
-          console.log("Add to wishlist successfully");
-          res.send({ inWishlist: true });
+      );
+    } else {
+      pool.query(
+        "DELETE FROM titanium.wishlist WHERE user_id = ? AND product_id = ?;",
+        [userId, productId],
+        (err, result) => {
+          if (err) {
+            console.log("Delete wishlist Error:", err);
+          }
+          if (result) {
+            console.log("Delete from wishlist successfully");
+            res.send({ inWishlist: false });
+          }
         }
-      }
-    );
-  } else {
-    pool.query(
-      "DELETE FROM titanium.wishlist WHERE user_id = ? AND product_id = ?;",
-      [userId, productId],
-      (err, result) => {
-        if (err) {
-          console.log("Delete wishlist Error:", err);
-        }
-        if (result) {
-          console.log("Delete from wishlist successfully");
-          res.send({ inWishlist: false });
-        }
-      }
-    );
+      );
+    }
+  } catch (err) {
+    console.log("/wishlist/change POST Error:", err);
   }
 });
 

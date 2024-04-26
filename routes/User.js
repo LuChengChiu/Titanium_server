@@ -32,7 +32,7 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
 router.get("/sessionCheck", async (req, res) => {
-  console.log("WTF", req.cookies, req.headers);
+  console.log("WTF", req.cookies);
   const sessionCookie = req.cookies.serverSession;
   try {
     if (sessionCookie) {
@@ -55,6 +55,23 @@ router.get("/logout", (req, res) => {
   } catch (err) {
     console.log(`/logout Error: ${err}`);
     res.status(401).send({ message: `LOGOUT Error:${err}` });
+  }
+});
+
+router.post("/", (req, res) => {
+  try {
+    const userId = req.body.userId;
+    let query = "SELECT * FROM titanium.membership WHERE user_id = ?";
+    pool.query(query, [userId], (err, result) => {
+      if (err) {
+        console.log("query membership error", err);
+        return;
+      }
+      console.log(result);
+      res.send(result);
+    });
+  } catch (err) {
+    console.log("/user/ POST Error:", err);
   }
 });
 

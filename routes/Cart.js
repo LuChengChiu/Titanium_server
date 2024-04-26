@@ -230,4 +230,25 @@ router.post("/return", (req, res) => {
   // 交易成功後，需要回傳 1|OK 給綠界
   res.send("1|OK");
 });
+
+router.post("/turnOrder", (req, res) => {
+  const value = req.body.removeCartValue;
+  try {
+    pool.query(
+      "DELETE FROM titanium.shopping_cart WHERE (user_id, product_id) IN (?)",
+      [value],
+      (err, result) => {
+        if (err) {
+          console.log("Remove from Cart Error:", err);
+        }
+        if (result) {
+          console.log(`remove from cart cause turn order!`);
+          res.send({ message: "Product successfully removed" });
+        }
+      }
+    );
+  } catch (err) {
+    console.log("POST - Remove Cart Error:", err);
+  }
+});
 module.exports = router;

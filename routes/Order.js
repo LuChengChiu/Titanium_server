@@ -53,8 +53,8 @@ router.post("/create", (req, res) => {
     const userId = req.body.userId;
     const orderNo = req.body.orderNo;
     const totalValue = req.body.sum;
-    const logisticId = req.body.logistic;
-    const paymentId = req.body.payment;
+    const logisticId = req.body.LogisticsSubType;
+    const paymentId = req.body.IsCollection;
     console.log(userId, orderNo, totalValue, logisticId, paymentId);
     pool.query(
       "INSERT INTO titanium.orders (order_id, user_id, total_value, logistic_id, payment_method_id) VALUES (?, ?, ?, ?, ?);",
@@ -74,18 +74,58 @@ router.post("/create", (req, res) => {
     console.log("/order/create POST Error:", err);
   }
 });
-router.get("/cloud", async (req, res) => {
+router.post("/createItem", (req, res) => {
   try {
-    const query = "SELECT * FROM titanium.orders;";
-    pool.query(query, (err, results) => {
-      if (!results) {
-        res.send({ message: "No result" });
-      } else {
-        res.send(results);
+    const value = req.body.values4Item;
+    pool.query(
+      "INSERT INTO titanium.order_items (order_item_id, order_id, product_id, quantity, price_per_item, subtotal) VALUES ?;",
+      [value],
+      (err, result) => {
+        if (err) {
+          console.log("query-create orderItem error: ", err);
+          return;
+        }
+        if (result) {
+          console.log(result);
+          res.send({ message: "OrderItem created successfully" });
+        }
       }
+    );
+  } catch (err) {
+    console.log("/order/createItem POST Error:", err);
+  }
+});
+
+router.post("/id", (req, res) => {
+  try {
+    const id = req.body.orderId;
+    const query = "SELECT * FROM titanium.orders WHERE order_id = ?;";
+    pool.query(query, [id], (err, result) => {
+      if (err) {
+        console.log("query order id Error:", err);
+        return;
+      }
+      console.log("order id result: ", result);
+      res.send(result);
     });
   } catch (err) {
-    console.log("ERROR CLOUD", err);
+    console.log("/order/id POST Error:", err);
+  }
+});
+router.post("/item", (req, res) => {
+  try {
+    const id = req.body.orderId;
+    const query = "SELECT * FROM titanium.order_items WHERE order_id = ?;";
+    pool.query(query, [id], (err, result) => {
+      if (err) {
+        console.log("query order item Error:", err);
+        return;
+      }
+      console.log("order item result: ", result);
+      res.send(result);
+    });
+  } catch (err) {
+    console.log("/order/item POST Error:", err);
   }
 });
 

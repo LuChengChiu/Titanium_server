@@ -82,5 +82,30 @@ router.post("/id", async (req, res) => {
     console.log("/prouducts POST /id Error:", err);
   }
 });
+router.post("/ids", async (req, res) => {
+  const ids = req.body.ids;
+  try {
+    const imgs = [];
+    for (let i = 0; i < ids.length; i++) {
+      const cloudResponse = await cloudinary.api.resources({
+        type: "upload",
+        prefix: `TITANIUM img/zippo${ids[i]}_`,
+        max_results: ids.length * 4,
+      });
+      imgs.push(cloudResponse.resources);
+    }
+    console.log(imgs);
+    pool.query(
+      "SELECT * FROM titanium.products WHERE product_id IN (?);",
+      [ids],
+      (err, result) => {
+        console.log("product info", result);
+        res.send({ info: result, imgs: imgs });
+      }
+    );
+  } catch (err) {
+    console.log("/prouducts POST /id Error:", err);
+  }
+});
 
 module.exports = router;
