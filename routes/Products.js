@@ -67,7 +67,7 @@ router.post("/id", async (req, res) => {
   try {
     const cloudResponse = await cloudinary.api.resources({
       type: "upload",
-      prefix: `TITANIUM img/zippo${id}`,
+      prefix: `TITANIUM img/zippo${id}_`,
       max_results: 50,
     });
     pool.query(
@@ -107,5 +107,73 @@ router.post("/ids", async (req, res) => {
     console.log("/prouducts POST /id Error:", err);
   }
 });
-
+router.post("/side", async (req, res) => {
+  try {
+    const id = parseInt(req.body.id);
+    var [frontId, backId] = [id - 1, id + 1];
+    console.log(frontId, backId);
+    if (frontId == 0) {
+      var frontId = 16;
+      const img = [];
+      const cloudF = await cloudinary.api.resources({
+        type: "upload",
+        prefix: `TITANIUM img/zippo${frontId}_`,
+        max_results: 1,
+      });
+      img.push(cloudF.resources[0]);
+      const cloudB = await cloudinary.api.resources({
+        type: "upload",
+        prefix: `TITANIUM img/zippo${backId}_`,
+        max_results: 1,
+      });
+      img.push(cloudB.resources[0]);
+      const newImg = img.map(({ public_id, secure_url }) => ({
+        public_id,
+        secure_url,
+      }));
+      res.send(newImg);
+    } else if (backId == 17) {
+      var backId = 1;
+      const img = [];
+      const cloudF = await cloudinary.api.resources({
+        type: "upload",
+        prefix: `TITANIUM img/zippo${frontId}_`,
+        max_results: 1,
+      });
+      img.push(cloudF.resources[0]);
+      const cloudB = await cloudinary.api.resources({
+        type: "upload",
+        prefix: `TITANIUM img/zippo${backId}_`,
+        max_results: 1,
+      });
+      img.push(cloudB.resources[0]);
+      const newImg = img.map(({ public_id, secure_url }) => ({
+        public_id,
+        secure_url,
+      }));
+      res.send(newImg);
+    } else {
+      const img = [];
+      const cloudF = await cloudinary.api.resources({
+        type: "upload",
+        prefix: `TITANIUM img/zippo${frontId}_`,
+        max_results: 1,
+      });
+      img.push(cloudF.resources[0]);
+      const cloudB = await cloudinary.api.resources({
+        type: "upload",
+        prefix: `TITANIUM img/zippo${backId}_`,
+        max_results: 1,
+      });
+      img.push(cloudB.resources[0]);
+      const newImg = img.map(({ public_id, secure_url }) => ({
+        public_id,
+        secure_url,
+      }));
+      res.send(newImg);
+    }
+  } catch (err) {
+    console.log("/products/side POST Error:", err);
+  }
+});
 module.exports = router;
