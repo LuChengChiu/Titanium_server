@@ -12,13 +12,13 @@ const {
   TITANIUM_PWD,
   TITANIUM_DB,
 } = process.env;
-// pool.getConnection(function (err, connection) {
-//   if (!err) {
-//     console.log("DB is connected");
-//   } else {
-//     console.log("Error connecting DB", err);
-//   }
-// });
+pool.getConnection(function (err, connection) {
+  if (!err) {
+    console.log("DB is connected");
+  } else {
+    console.log("Error connecting DB", err);
+  }
+});
 cloudinary.config({
   cloud_name: CLOUDINARY_CLOUD_NAME,
   api_key: CLOUDINARY_API_KEY,
@@ -53,14 +53,18 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/info", (req, res) => {
-  pool.query("SELECT * FROM titanium.products;", (err, result) => {
-    if (err) {
-      console.log("/products GET /info Error:", err);
-      return;
-    }
-    // console.log(result);
-    res.send(result);
-  });
+  try {
+    pool.query("SELECT * FROM titanium.products;", (err, result) => {
+      if (err) {
+        console.log("/products GET /info Error:", err);
+        return;
+      }
+      // console.log(result);
+      res.send(result);
+    });
+  } catch (err) {
+    console.log("/products GET /info Error:", err);
+  }
 });
 router.post("/id", async (req, res) => {
   const id = req.body.id;
